@@ -1,10 +1,11 @@
+import { AuthProvider, AuthContext } from "./context/AuthContext";
 import JoinPage from "./page/JoinPage";
 
 const App = () => {
   return (
-    <div className="wrapper">
-      <JoinPage />
-    </div>
+    <AuthProvider>
+      <AuthContext.Consumer>{({ isAuth }) => !isAuth && <JoinPage />}</AuthContext.Consumer>
+    </AuthProvider>
   );
 };
 
