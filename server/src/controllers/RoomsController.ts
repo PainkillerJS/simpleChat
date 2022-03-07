@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 
-import { IRoom } from "../models/room";
-import type { TRooms, TDataRooms } from "../types";
+import type { IRoom } from "../models/room";
+
+type TDataRooms = Array<string> | Map<string, string>;
+type TRooms = Map<string, Map<string, TDataRooms>>;
 
 class RoomsController {
   constructor() {
@@ -24,6 +26,14 @@ class RoomsController {
     }
 
     res.json({ message: "333" });
+  }
+
+  get getListRooms() {
+    return this.rooms;
+  }
+
+  set updateRooms(rooms: TRooms) {
+    this.rooms = rooms;
   }
 }
 

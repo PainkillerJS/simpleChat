@@ -1,7 +1,8 @@
 import Router from "express";
-import RoomsControler from "../controllers/RoomsControler";
+import RoomsController from "../controllers/RoomsController";
+
 const route = Router();
 
-route.post("/", RoomsControler.connectRoom);
+route.post("/", RoomsController.connectRoom.bind(RoomsController));
 
 export default route;

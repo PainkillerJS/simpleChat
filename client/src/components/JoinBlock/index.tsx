@@ -1,4 +1,3 @@
-import socket from "../../helpers/socket";
 import { Inputs } from "./components/Inputs";
 
 export const JoinBlock = () => {
