@@ -13,19 +13,38 @@ class RoomsController {
   private rooms: TRooms;
 
   async connectRoom(req: Request<{}, {}, IRoom>, res: Response) {
-    const { room, user } = req.body;
+    try {
+      const { room } = req.body;
 
-    if (!this.rooms.has(room)) {
-      this.rooms.set(
-        room,
-        new Map<string, TDataRooms>([
-          ["users", new Map()],
-          ["message", []]
-        ])
-      );
+      if (!this.rooms.has(room)) {
+        this.rooms.set(
+          room,
+          new Map<string, TDataRooms>([
+            ["users", new Map()],
+            ["messages", []]
+          ])
+        );
+      }
+
+      res.send();
+    } catch (e) {
+      res.status(500).json({ e });
     }
+  }
+  async getUsersRoom(req: Request<{}, {}, {}, { id: string }>, res: Response) {
+    try {
+      const room = req.query.id;
 
-    res.json({ message: "333" });
+      const roomData = {
+        //@ts-ignore
+        users: [...this.rooms.get(room)?.get("users")?.values()],
+        messages: [...this.rooms.get(room)?.get("messages")?.values()]
+      };
+
+      res.json(roomData);
+    } catch (e) {
+      res.status(400).json({ e });
+    }
   }
 
   get getListRooms() {

@@ -5,11 +5,11 @@ import type { IRoom } from "../models/room";
 
 export const socket = (io: InstanceType<typeof Server>) => {
   io.on("connection", (socket) => {
-    socket.on("disconnect", (user) => {
+    socket.on("disconnect", () => {
       try {
         RoomsController.getListRooms.forEach((value, roomId, rooms) => {
           //@ts-ignore
-          if (value.get("users")?.delete(user)) {
+          if (value.get("users")?.delete(socket.id)) {
             const users = [...value.get("users")?.values()];
             socket.to(roomId).emit("ROOM:UPDATE_USERS", users);
             RoomsController.updateRooms = rooms;
@@ -21,7 +21,7 @@ export const socket = (io: InstanceType<typeof Server>) => {
       }
     });
 
-    socket.on("ROOM:JOIN", ({ room, user }: IRoom) => {
+    socket.on("ROOM:JOIN", async ({ room, user }: IRoom) => {
       try {
         const rooms = RoomsController.getListRooms;
 
@@ -30,8 +30,7 @@ export const socket = (io: InstanceType<typeof Server>) => {
         rooms.get(room)?.get("users")?.set(socket.id, user);
         //@ts-ignore
         const users = [...rooms.get(room)?.get("users").values()];
-        socket.broadcast.to(room).emit("ROOM:JOINED", users);
-
+        socket.broadcast.to(room).emit("ROOM:UPDATE_USERS", users);
         RoomsController.updateRooms = rooms;
       } catch (e) {
         return e;

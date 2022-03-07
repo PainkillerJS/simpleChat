@@ -27,8 +27,11 @@ export const RoomProvider: FC = ({ children }) => {
     roomId: ""
   });
 
-  const onUpdateRoomValue = (value: Partial<Omit<IRoomValues, "onUpdateRoomValue">>) => setValueRoom({ ...valueRoom, ...value });
-  console.log(valueRoom);
+  const onUpdateRoomValue = (value: Partial<Omit<IRoomValues, "onUpdateRoomValue">>) => {
+    console.log(value);
+    setValueRoom({ ...valueRoom, ...value });
+  };
+
   return <RoomContext.Provider value={{ ...valueRoom, onUpdateRoomValue }}>{children}</RoomContext.Provider>;
 };
 

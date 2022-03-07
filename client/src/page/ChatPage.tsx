@@ -9,12 +9,7 @@ const ChatPage = () => {
   const { onUpdateRoomValue, users, roomId, currentUser, messages } = useRoom();
 
   useEffect(() => {
-    const updateUsers = (users: Array<IRoom["user"]>) => {
-      onUpdateRoomValue({ users });
-    };
-
-    socket.on("ROOM:JOINED", updateUsers);
-    socket.on("ROOM:UPDATE_USERS", updateUsers);
+    socket.on("ROOM:UPDATE_USERS", (users: Array<IRoom["user"]>) => onUpdateRoomValue({ users }));
   }, []);
 
   return <Chat users={users} roomId={roomId} currentUser={currentUser} messages={messages} />;

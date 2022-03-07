@@ -1,11 +1,12 @@
 import { useState } from "react";
 import type { Dispatch, SetStateAction, ChangeEventHandler } from "react";
 
+import socket from "../../../helpers/socket";
+import { getUsersRoom } from "../../../package/api/rest/rooms";
 import { intoRoom } from "../../../package/api/rest/rooms";
 import { useAuth } from "../../../context/AuthContext";
 import { useRoom } from "../../../context/RoomProvider";
 import { Button } from "./Button";
-import socket from "../../../helpers/socket";
 
 type THandleChangeValue = (setValue: Dispatch<SetStateAction<string>>) => ChangeEventHandler<HTMLInputElement>;
 
@@ -24,10 +25,10 @@ export const Inputs = () => {
     if (room && user) {
       const roomData = { room, user };
 
-      onUpdateRoomValue({ roomId: room, currentUser: user });
-
       return intoRoom(roomData)
         .then(() => socket.emit("ROOM:JOIN", roomData))
+        .then(() => getUsersRoom(room) as unknown as { data: { users: Array<string>; messages: Array<string> } })
+        .then(({ data: { users, messages } }) => onUpdateRoomValue({ users, messages, roomId: room, currentUser: user }))
         .then(() => setIsAuth(true));
     }
 
