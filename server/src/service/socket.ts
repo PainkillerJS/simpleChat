@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 
 import RoomsController from "../controllers/RoomsController";
-import type { IRoom } from "../models/room";
+import type { IRoom, INewMessage } from "../models/room";
 
 export const socket = (io: InstanceType<typeof Server>) => {
   io.on("connection", (socket) => {
@@ -32,6 +32,21 @@ export const socket = (io: InstanceType<typeof Server>) => {
         const users = [...rooms.get(room)?.get("users").values()];
         socket.broadcast.to(room).emit("ROOM:UPDATE_USERS", users);
         RoomsController.updateRooms = rooms;
+      } catch (e) {
+        return e;
+      }
+    });
+
+    socket.on("ROOM:SEND_MESSAGE", async ({ room, user, message }: INewMessage) => {
+      try {
+        const dataMessage = {
+          user,
+          message
+        };
+
+        //@ts-ignore
+        RoomsController.getListRooms.get(room)?.get("messages")?.push(dataMessage);
+        socket.broadcast.to(room).emit("ROOM:NEW_MESSAGE", dataMessage);
       } catch (e) {
         return e;
       }

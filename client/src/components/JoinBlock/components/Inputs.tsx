@@ -7,6 +7,7 @@ import { intoRoom } from "../../../package/api/rest/rooms";
 import { useAuth } from "../../../context/AuthContext";
 import { useRoom } from "../../../context/RoomProvider";
 import { Button } from "./Button";
+import type { INewMessage } from "../../../model/room";
 
 type THandleChangeValue = (setValue: Dispatch<SetStateAction<string>>) => ChangeEventHandler<HTMLInputElement>;
 
@@ -27,7 +28,7 @@ export const Inputs = () => {
 
       return intoRoom(roomData)
         .then(() => socket.emit("ROOM:JOIN", roomData))
-        .then(() => getUsersRoom(room) as unknown as { data: { users: Array<string>; messages: Array<string> } })
+        .then(() => getUsersRoom(room) as unknown as { data: { users: Array<string>; messages: Array<INewMessage> } })
         .then(({ data: { users, messages } }) => onUpdateRoomValue({ users, messages, roomId: room, currentUser: user }))
         .then(() => setIsAuth(true));
     }

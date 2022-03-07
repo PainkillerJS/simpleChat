@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 import type { IChatProps } from "../Chat";
 
-export const ChatList = ({ messages }: Pick<IChatProps, "messages">) => {
+export const ChatList = ({ messages, currentUser }: Pick<IChatProps, "messages" | "currentUser">) => {
   const messagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -11,11 +11,11 @@ export const ChatList = ({ messages }: Pick<IChatProps, "messages">) => {
 
   return (
     <div ref={messagesRef} className="messages">
-      {messages.map((message) => (
-        <div className="message">
+      {messages.map(({ message, user }) => (
+        <div className={`message ${currentUser === user ? "author" : ""}`} key={message}>
           <p>{message}</p>
           <div>
-            <span>{message}</span>
+            <span>{user}</span>
           </div>
         </div>
       ))}

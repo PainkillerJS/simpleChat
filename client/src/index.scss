@@ -90,6 +90,22 @@
 .message {
   margin-bottom: 20px;
 
+  &.author {
+    display: flex;
+    flex-direction: column;
+    word-break: break-word;
+    margin-right: 2rem;
+
+    & p {
+      max-width: 38rem;
+    }
+
+    & p,
+    & > div {
+      margin-left: auto;
+    }
+  }
+
   & p {
     display: inline-flex;
     border-radius: 10px;

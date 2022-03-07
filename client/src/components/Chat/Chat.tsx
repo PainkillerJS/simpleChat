@@ -1,17 +1,17 @@
 import { SidebarUsers } from "./components/SidebarUsers";
 import { ChatList } from "./components/ChatList";
 import { FormChat } from "./components/FormChat";
-import type { IRoomValues } from "../../context/RoomProvider";
+import type { TStateProvider } from "../../context/RoomProvider";
 
-export interface IChatProps extends Omit<IRoomValues, "onUpdateRoomValue"> {}
+export interface IChatProps extends TStateProvider {}
 
-export const Chat = ({ users, messages, currentUser, roomId }: IChatProps) => {
+export const Chat = ({ users, messages, roomId, currentUser }: IChatProps) => {
   return (
     <div className="chat">
       <SidebarUsers users={users} roomId={roomId} />
       <div className="chat-messages">
-        <ChatList messages={messages} />
-        <FormChat roomId={roomId} currentUser={currentUser} />
+        <ChatList messages={messages} currentUser={currentUser} />
+        <FormChat />
       </div>
     </div>
   );

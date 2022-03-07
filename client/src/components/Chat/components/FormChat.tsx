@@ -1,27 +1,28 @@
 import { useState } from "react";
 import type { ChangeEventHandler } from "react";
 
+import { useRoom } from "../../../context/RoomProvider";
 import socket from "../../../helpers/socket";
-import type { IChatProps } from "../Chat";
 
-export const FormChat = ({ roomId, currentUser }: Pick<IChatProps, "currentUser" | "roomId">) => {
-  const [messageValue, setMessageValue] = useState("");
+export const FormChat = () => {
+  const { currentUser: user, roomId: room, onAddNewMessage } = useRoom();
+  const [message, setMessage] = useState("");
 
-  const handleChangeTextArea: ChangeEventHandler<HTMLTextAreaElement> = ({ target }) => setMessageValue(target.value);
+  const handleChangeTextArea: ChangeEventHandler<HTMLTextAreaElement> = ({ target }) => setMessage(target.value);
 
   const onSendMessage = () => {
-    socket.emit("ROOM:NEW_MESSAGE", {
-      currentUser,
-      roomId,
-      text: messageValue
+    socket.emit("ROOM:SEND_MESSAGE", {
+      user,
+      room,
+      message
     });
-    // onAddMessage({ currentUser, text: messageValue });
-    setMessageValue("");
+    onAddNewMessage({ user, message });
+    setMessage("");
   };
 
   return (
     <form>
-      <textarea value={messageValue} onChange={handleChangeTextArea} className="form-control" rows={3} />
+      <textarea value={message} onChange={handleChangeTextArea} className="form-control" rows={3} />
       <button onClick={onSendMessage} type="button" className="btn btn-primary">
         Отправить
       </button>

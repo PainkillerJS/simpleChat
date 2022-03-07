@@ -5,9 +5,9 @@ export const SidebarUsers = ({ roomId, users }: Pick<IChatProps, "roomId" | "use
     <div className="chat-users">
       Комната: <b>{roomId}</b>
       <hr />
-      <b>Онлайн ({users.length}):</b>
+      <b>Онлайн ({users?.length}):</b>
       <ul>
-        {users.map((name, index) => (
+        {users?.map((name, index) => (
           <li key={name + index}>{name}</li>
         ))}
       </ul>
